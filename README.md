@@ -40,9 +40,6 @@ end
 
 TODO
 
-### Spletni vmesnik
-
-TODO
 
 ## Implementacija
 
