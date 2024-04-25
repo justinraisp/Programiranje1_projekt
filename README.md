@@ -43,6 +43,8 @@ TODO
 
 ## Implementacija
 
+TODO
+
 ### Struktura datotek
 
 TODO
