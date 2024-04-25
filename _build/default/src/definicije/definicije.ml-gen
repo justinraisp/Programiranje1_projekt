@@ -3,6 +3,9 @@
 (** @canonical Definicije.Avtomat *)
 module Avtomat = Definicije__Avtomat
 
+(** @canonical Definicije.Sklad *)
+module Sklad = Definicije__Sklad
+
 (** @canonical Definicije.Stanje *)
 module Stanje = Definicije__Stanje
 
