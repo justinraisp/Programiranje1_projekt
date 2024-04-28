@@ -1,10 +1,12 @@
 type stanje = Stanje.t
+type 'a sklad = 'a Sklad.t
 
 type t = {
   stanja : stanje list;
   zacetno_stanje : stanje;
   sprejemna_stanja : stanje list;
   prehodi : (stanje * char * stanje) list;
+  sklad : char sklad;
 }
 
 let prazen_avtomat zacetno_stanje =
@@ -13,6 +15,7 @@ let prazen_avtomat zacetno_stanje =
     zacetno_stanje;
     sprejemna_stanja = [];
     prehodi = [];
+    sklad = Sklad.prazen_sklad;
   }
 
 let dodaj_nesprejemno_stanje stanje avtomat =
