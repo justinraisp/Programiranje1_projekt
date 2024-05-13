@@ -12,21 +12,32 @@ type model = {
   avtomat : t;
   stanje_avtomata : Stanje.t;
   stanje_vmesnika : stanje_vmesnika;
+  stanje_sklada : char Sklad.t;
 }
 
 type msg = PreberiNiz of string | ZamenjajVmesnik of stanje_vmesnika
 
-let preberi_niz avtomat q niz =
-  let aux acc znak =
-    match acc with
-    | None -> None
-    | Some q -> Avtomat.prehodna_funkcija avtomat q znak
+let preberi_niz avtomat zacetek sklad niz =
+  let zacetno_stanje = zacetek in
+  let zacetni_sklad = sklad in
+  let rec aux trenutno_stanje trenutni_sklad index =
+    if index < String.length niz then
+      let znak = String.get niz index in
+      match Avtomat.prehodna_funkcija avtomat trenutni_sklad trenutno_stanje znak with
+      | None -> None
+      | Some (nov_stanje, nov_sklad) ->
+          aux nov_stanje nov_sklad (index + 1)
+    else
+      if je_sprejemno_stanje avtomat trenutno_stanje then
+        Some trenutno_stanje
+      else
+        None 
   in
-  niz |> String.to_seq |> Seq.fold_left aux (Some q)
+  aux zacetno_stanje zacetni_sklad 0 
 
 let update model = function
   | PreberiNiz str -> (
-      match preberi_niz model.avtomat model.stanje_avtomata str with
+      match preberi_niz model.avtomat model.stanje_avtomata model.stanje_sklada str with
       | None -> { model with stanje_vmesnika = OpozoriloONapacnemNizu }
       | Some stanje_avtomata ->
           {
@@ -58,7 +69,7 @@ let izpisi_avtomat avtomat =
     in
     print_endline prikaz
   in
-  List.iter izpisi_stanje (seznam_stanj avtomat)
+  List.iter izpisi_stanje (List.rev (seznam_stanj avtomat))
 
 let beri_niz _model =
   print_string "Vnesi niz > ";
@@ -89,11 +100,18 @@ let init avtomat =
     avtomat;
     stanje_avtomata = zacetno_stanje avtomat;
     stanje_vmesnika = SeznamMoznosti;
+    stanje_sklada = Sklad.prazen_sklad;
   }
 
-let rec loop model =
-  let msg = view model in
-  let model' = update model msg in
-  loop model'
+  let rec loop model =
+  match model.stanje_vmesnika with
+  | SeznamMoznosti ->
+    let msg = izpisi_moznosti () in
+    let model' = update model msg in
+    loop model'
+  | _ ->
+    let msg = view model in
+    let model' = update model msg in
+    loop model'
 
-let _ = loop (init enke_1mod3)
+let _ = loop(init oklepaji)

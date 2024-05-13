@@ -1,1 +1,1 @@
-src/definicije/avtomat.mli: Stanje
+src/definicije/avtomat.mli: Sklad Stanje

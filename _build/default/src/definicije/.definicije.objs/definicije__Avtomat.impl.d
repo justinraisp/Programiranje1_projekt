@@ -1,1 +1,1 @@
-src/definicije/avtomat.ml: List Seq Stanje String
+src/definicije/avtomat.ml: List Printf Sklad Stanje
