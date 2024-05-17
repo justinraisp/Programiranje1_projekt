@@ -31,38 +31,39 @@ let dodaj_sprejemno_stanje stanje avtomat =
 let dodaj_prehod stanje1 znak stanje2 avtomat =
   { avtomat with prehodi = (stanje1, znak, stanje2) :: avtomat.prehodi }
 
+let ustrezni_odprti_oklepaj zaprt_oklepaj =
+  match zaprt_oklepaj with
+  | ')' -> '('
+  | '}' -> '{'
+  | ']' -> '['
+  | _ -> failwith("Podan znak ni zaklepaj")
+
 let prehodna_funkcija avtomat sklad stanje znak =
   match List.find_opt
           (fun (stanje1, znak', _stanje2) -> stanje1 = stanje && znak = znak')
           avtomat.prehodi with
   | None -> 
-      Printf.printf "Napaka: Ni ustreznega prehoda za stanje %s in znak %c\n" (Stanje.v_niz stanje) znak;
       None
   | Some (_, _, stanje2) ->
     begin 
       match znak with
-      | '(' -> 
-          Printf.printf "Prehod: %s -> %s (Push %c)\n" (Stanje.v_niz stanje) (Stanje.v_niz stanje2) znak;
-          Some (stanje2, Sklad.dodaj '(' sklad)
-      | ')' -> 
-          Printf.printf "Prehod: %s -> %s (Pop %c)\n" (Stanje.v_niz stanje) (Stanje.v_niz stanje2) znak;
-          if Sklad.je_prazen sklad || Stanje.v_niz stanje = "q3" then 
+      | '(' | '{' | '[' -> 
+        Some (stanje2, Sklad.dodaj znak sklad)
+      | ')' | '}' | ']' -> 
+          if Sklad.je_prazen sklad || Stanje.v_niz stanje = "q3" || Sklad.vrh sklad != ustrezni_odprti_oklepaj znak then 
             Some(Stanje.iz_niza "q3", sklad)
           else 
             Some (if Sklad.je_prazen (Sklad.odstrani sklad) then (Stanje.iz_niza "q2", Sklad.odstrani sklad) else (Stanje.iz_niza "q1", Sklad.odstrani sklad))
       | _ ->  
-          Printf.printf "Prehod: %s -> %s (Noben učinek za znak %c)\n" (Stanje.v_niz stanje) (Stanje.v_niz stanje2) znak;
           None
     end
 
-    
 let zacetno_stanje avtomat = avtomat.zacetno_stanje
 let seznam_stanj avtomat = avtomat.stanja
 let seznam_prehodov avtomat = avtomat.prehodi
 
 let je_sprejemno_stanje avtomat stanje =
   List.mem stanje avtomat.sprejemna_stanja
-
 let oklepaji = 
   let q0 = Stanje.iz_niza "q0"
   and q1 = Stanje.iz_niza "q1"
@@ -76,3 +77,13 @@ let oklepaji =
   |> dodaj_prehod q1 ')' q1 |> dodaj_prehod q1 ')' q2
   |> dodaj_prehod q2 '(' q1 |> dodaj_prehod q2 ')' q3
   |> dodaj_prehod q3 ')' q3 |> dodaj_prehod q3 '(' q3 
+  |> dodaj_prehod q0 '[' q1 |> dodaj_prehod q0 ']' q3
+  |> dodaj_prehod q1 '[' q1
+  |> dodaj_prehod q1 ']' q1 |> dodaj_prehod q1 ']' q2
+  |> dodaj_prehod q2 '[' q1 |> dodaj_prehod q2 ']' q3
+  |> dodaj_prehod q3 ']' q3 |> dodaj_prehod q3 '[' q3 
+  |> dodaj_prehod q0 '{' q1 |> dodaj_prehod q0 '}' q3
+  |> dodaj_prehod q1 '{' q1
+  |> dodaj_prehod q1 '}' q1 |> dodaj_prehod q1 '}' q2
+  |> dodaj_prehod q2 '{' q1 |> dodaj_prehod q2 '}' q3
+  |> dodaj_prehod q3 '}' q3 |> dodaj_prehod q3 '{' q3 

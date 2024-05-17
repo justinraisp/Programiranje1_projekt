@@ -1,1 +1,1 @@
-src/definicije/avtomat.ml: List Printf Sklad Stanje
+src/definicije/avtomat.ml: List Sklad Stanje
