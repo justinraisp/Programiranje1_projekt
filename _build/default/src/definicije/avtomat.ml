@@ -36,25 +36,21 @@ let prehodna_funkcija avtomat sklad stanje znak =
           (fun (stanje1, znak', _stanje2) -> stanje1 = stanje && znak = znak')
           avtomat.prehodi with
   | None -> 
-      (* Dodamo izpis za preverjanje *)
       Printf.printf "Napaka: Ni ustreznega prehoda za stanje %s in znak %c\n" (Stanje.v_niz stanje) znak;
       None
   | Some (_, _, stanje2) ->
     begin 
       match znak with
       | '(' -> 
-          (* Dodamo izpis za preverjanje *)
           Printf.printf "Prehod: %s -> %s (Push %c)\n" (Stanje.v_niz stanje) (Stanje.v_niz stanje2) znak;
           Some (stanje2, Sklad.dodaj '(' sklad)
       | ')' -> 
-          (* Dodamo izpis za preverjanje *)
           Printf.printf "Prehod: %s -> %s (Pop %c)\n" (Stanje.v_niz stanje) (Stanje.v_niz stanje2) znak;
-          if Sklad.je_prazen sklad then 
-            None
+          if Sklad.je_prazen sklad || Stanje.v_niz stanje = "q3" then 
+            Some(Stanje.iz_niza "q3", sklad)
           else 
             Some (if Sklad.je_prazen (Sklad.odstrani sklad) then (Stanje.iz_niza "q2", Sklad.odstrani sklad) else (Stanje.iz_niza "q1", Sklad.odstrani sklad))
-      | _ -> 
-          (* Dodamo izpis za preverjanje *)
+      | _ ->  
           Printf.printf "Prehod: %s -> %s (Noben učinek za znak %c)\n" (Stanje.v_niz stanje) (Stanje.v_niz stanje2) znak;
           None
     end
@@ -70,9 +66,13 @@ let je_sprejemno_stanje avtomat stanje =
 let oklepaji = 
   let q0 = Stanje.iz_niza "q0"
   and q1 = Stanje.iz_niza "q1"
-  and q2 = Stanje.iz_niza "q2" in
+  and q2 = Stanje.iz_niza "q2"
+  and q3 = Stanje.iz_niza "q3" in
   prazen_avtomat q0 |> dodaj_sprejemno_stanje q2
   |> dodaj_nesprejemno_stanje q1
-  |> dodaj_prehod q0 '(' q1 |> dodaj_prehod q1 '(' q1
+  |> dodaj_nesprejemno_stanje q3
+  |> dodaj_prehod q0 '(' q1 |> dodaj_prehod q0 ')' q3
+  |> dodaj_prehod q1 '(' q1
   |> dodaj_prehod q1 ')' q1 |> dodaj_prehod q1 ')' q2
-  |> dodaj_prehod q2 '(' q1 
+  |> dodaj_prehod q2 '(' q1 |> dodaj_prehod q2 ')' q3
+  |> dodaj_prehod q3 ')' q3 |> dodaj_prehod q3 '(' q3 

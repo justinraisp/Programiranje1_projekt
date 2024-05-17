@@ -17,9 +17,9 @@ type model = {
 
 type msg = PreberiNiz of string | ZamenjajVmesnik of stanje_vmesnika
 
-let preberi_niz avtomat zacetek sklad niz =
-  let zacetno_stanje = zacetek in
-  let zacetni_sklad = sklad in
+let preberi_niz avtomat niz =
+  let zacetno_stanje = avtomat.zacetno_stanje in
+  let zacetni_sklad = Sklad.prazen_sklad in
   let rec aux trenutno_stanje trenutni_sklad index =
     if index < String.length niz then
       let znak = String.get niz index in
@@ -28,16 +28,13 @@ let preberi_niz avtomat zacetek sklad niz =
       | Some (nov_stanje, nov_sklad) ->
           aux nov_stanje nov_sklad (index + 1)
     else
-      if je_sprejemno_stanje avtomat trenutno_stanje then
-        Some trenutno_stanje
-      else
-        None 
+      Some trenutno_stanje
   in
   aux zacetno_stanje zacetni_sklad 0 
 
 let update model = function
   | PreberiNiz str -> (
-      match preberi_niz model.avtomat model.stanje_avtomata model.stanje_sklada str with
+      match preberi_niz model.avtomat str with
       | None -> { model with stanje_vmesnika = OpozoriloONapacnemNizu }
       | Some stanje_avtomata ->
           {
