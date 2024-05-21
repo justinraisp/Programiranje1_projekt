@@ -1,0 +1,30 @@
+\documentclass{standalone}
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning}
+
+\begin{document}
+
+\begin{tikzpicture}[shorten >=1pt, node distance=2cm, on grid, auto]
+    \node[state, initial] (q_0)   {$q_0$}; 
+    \node[state] (q_1) [right=of q_0] {$q_1$}; 
+    \node[state, accepting] (q_2) [right=of q_1] {$q_2$}; 
+    \node[state] (q_3) [below=of q_1] {$q_3$};
+
+    \path[->] 
+    (q_0) edge  node {"("} (q_1)
+          edge  node {"{"} (q_1)
+          edge  node {"["} (q_1)
+          edge [bend left]  node {")"} (q_3)
+          edge [bend left]  node {"}"} (q_3)
+          edge [bend left]  node {"]"} (q_3)
+    (q_1) edge [loop above] node {"(", "{", "["} (q_1)
+          edge [loop below] node {")", "}", "]"} (q_1)
+          edge [bend left]  node {")"} (q_2)
+          edge [bend left]  node {"}"} (q_2)
+          edge [bend left]  node {"]"} (q_2)
+    (q_2) edge [bend left] node {"(", "{", "["} (q_1)
+          edge [bend left] node {")", "}", "]"} (q_3)
+    (q_3) edge [loop below] node {"(", "{", "[", ")", "}", "]"} (q_3);
+\end{tikzpicture}
+
+\end{document}
