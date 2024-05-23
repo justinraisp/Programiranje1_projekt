@@ -11,6 +11,43 @@
   }
   (globalThis));
 
+//# unitInfo: Provides: Definicije__Sklad
+//# unitInfo: Requires: Stdlib
+(function
+  (globalThis){
+   "use strict";
+   var
+    runtime = globalThis.jsoo_runtime,
+    cst_Sklad_je_prazen$1 = "Sklad je prazen";
+   function caml_call1(f, a0){
+    return (f.l >= 0 ? f.l : f.l = f.length) == 1
+            ? f(a0)
+            : runtime.caml_call_gen(f, [a0]);
+   }
+   var
+    global_data = runtime.caml_get_global_data(),
+    Stdlib = global_data.Stdlib,
+    cst_Sklad_je_prazen$0 = cst_Sklad_je_prazen$1,
+    cst_Sklad_je_prazen = cst_Sklad_je_prazen$1,
+    prazen_sklad = 0;
+   function je_prazen(sklad){return sklad ? 0 : 1;}
+   function dodaj(element, sklad){return [0, element, sklad];}
+   function odstrani(sklad){
+    if(! sklad) return caml_call1(Stdlib[2], cst_Sklad_je_prazen);
+    var xs = sklad[2];
+    return xs;
+   }
+   function vrh(sklad){
+    if(! sklad) return caml_call1(Stdlib[2], cst_Sklad_je_prazen$0);
+    var x = sklad[1];
+    return x;
+   }
+   var Definicije_Sklad = [0, prazen_sklad, je_prazen, dodaj, odstrani, vrh];
+   runtime.caml_register_global(3, Definicije_Sklad, "Definicije__Sklad");
+   return;
+  }
+  (globalThis));
+
 //# unitInfo: Provides: Definicije__Stanje
 (function(globalThis){
    "use strict";
@@ -24,11 +61,15 @@
   (globalThis));
 
 //# unitInfo: Provides: Definicije__Avtomat
-//# unitInfo: Requires: Definicije__Stanje, Stdlib__List, Stdlib__Seq, Stdlib__String
+//# unitInfo: Requires: Definicije__Sklad, Definicije__Stanje, Stdlib, Stdlib__List
 (function
   (globalThis){
    "use strict";
-   var runtime = globalThis.jsoo_runtime;
+   var
+    runtime = globalThis.jsoo_runtime,
+    cst_q1$1 = "q1",
+    cst_q2$1 = "q2",
+    cst_q3$1 = "q3";
    function caml_call1(f, a0){
     return (f.l >= 0 ? f.l : f.l = f.length) == 1
             ? f(a0)
@@ -41,47 +82,126 @@
    }
    var
     global_data = runtime.caml_get_global_data(),
-    Stdlib_String = global_data.Stdlib__String,
-    Stdlib_Seq = global_data.Stdlib__Seq,
     Stdlib_List = global_data.Stdlib__List,
+    Definicije_Sklad = global_data.Definicije__Sklad,
     Definicije_Stanje = global_data.Definicije__Stanje,
+    Stdlib = global_data.Stdlib,
+    cst_q3 = cst_q3$1,
+    cst_q2 = cst_q2$1,
+    cst_q1 = cst_q1$1,
+    cst_Podan_znak_ni_zaklepaj = "Podan znak ni zaklepaj",
     cst_q0 = "q0",
-    cst_q1 = "q1",
-    cst_q2 = "q2";
+    cst_q1$0 = cst_q1$1,
+    cst_q2$0 = cst_q2$1,
+    cst_q3$0 = cst_q3$1;
    function prazen_avtomat(zacetno_stanje){
-    return [0, [0, zacetno_stanje, 0], zacetno_stanje, 0, 0];
+    return [0,
+            [0, zacetno_stanje, 0],
+            zacetno_stanje,
+            0,
+            0,
+            Definicije_Sklad[1]];
    }
    function dodaj_nesprejemno_stanje(stanje, avtomat){
-    return [0, [0, stanje, avtomat[1]], avtomat[2], avtomat[3], avtomat[4]];
+    return [0,
+            [0, stanje, avtomat[1]],
+            avtomat[2],
+            avtomat[3],
+            avtomat[4],
+            avtomat[5]];
    }
    function dodaj_sprejemno_stanje(stanje, avtomat){
     return [0,
             [0, stanje, avtomat[1]],
             avtomat[2],
             [0, stanje, avtomat[3]],
-            avtomat[4]];
+            avtomat[4],
+            avtomat[5]];
    }
    function dodaj_prehod(stanje1, znak, stanje2, avtomat){
     return [0,
             avtomat[1],
             avtomat[2],
             avtomat[3],
-            [0, [0, stanje1, znak, stanje2], avtomat[4]]];
+            [0, [0, stanje1, znak, stanje2], avtomat[4]],
+            avtomat[5]];
    }
-   function prehodna_funkcija(avtomat, stanje, znak){
-    var _b_ = avtomat[4];
-    function _c_(param){
+   function prehodna_funkcija(avtomat, sklad, stanje, zaprt_oklepaj){
+    var _a_ = avtomat[4];
+    function _b_(param){
      var
-      znak$0 = param[2],
+      znak = param[2],
       stanje1 = param[1],
-      _d_ = runtime.caml_equal(stanje1, stanje),
-      _e_ = _d_ ? znak === znak$0 ? 1 : 0 : _d_;
-     return _e_;
+      _h_ = runtime.caml_equal(stanje1, stanje),
+      _i_ = _h_ ? zaprt_oklepaj === znak ? 1 : 0 : _h_;
+     return _i_;
     }
-    var match = caml_call2(Stdlib_List[39], _c_, _b_);
+    var match = caml_call2(Stdlib_List[39], _b_, _a_);
     if(! match) return 0;
-    var stanje2 = match[1][3];
-    return [0, stanje2];
+    var stanje2 = match[1][3], switch$0 = 0;
+    if(91 <= zaprt_oklepaj){
+     if(123 <= zaprt_oklepaj){
+      if(126 > zaprt_oklepaj)
+       switch(zaprt_oklepaj - 123 | 0){
+         case 0:
+          switch$0 = 1; break;
+         case 1: break;
+         default: switch$0 = 2;
+       }
+     }
+     else if(94 > zaprt_oklepaj)
+      switch(zaprt_oklepaj - 91 | 0){
+        case 0:
+         switch$0 = 1; break;
+        case 1: break;
+        default: switch$0 = 2;
+      }
+    }
+    else if(40 === zaprt_oklepaj)
+     switch$0 = 1;
+    else if(41 === zaprt_oklepaj) switch$0 = 2;
+    switch(switch$0){
+      case 0:
+       return 0;
+      case 1:
+       return [0,
+               [0,
+                stanje2,
+                caml_call2(Definicije_Sklad[3], zaprt_oklepaj, sklad)]];
+      default:
+       if
+        (!
+         caml_call1(Definicije_Sklad[2], sklad)
+         &&
+          !
+          runtime.caml_string_equal
+           (caml_call1(Definicije_Stanje[2], stanje), cst_q3$1)){
+        var
+         _c_ =
+           41 === zaprt_oklepaj
+            ? 40
+            : 93
+              === zaprt_oklepaj
+              ? 91
+              : 125
+                === zaprt_oklepaj
+                ? 123
+                : caml_call1(Stdlib[2], cst_Podan_znak_ni_zaklepaj);
+        if(caml_call1(Definicije_Sklad[5], sklad) === _c_){
+         var _d_ = caml_call1(Definicije_Sklad[4], sklad);
+         if(caml_call1(Definicije_Sklad[2], _d_))
+          var
+           _e_ = caml_call1(Definicije_Sklad[4], sklad),
+           _f_ = [0, caml_call1(Definicije_Stanje[1], cst_q2), _e_];
+         else
+          var
+           _g_ = caml_call1(Definicije_Sklad[4], sklad),
+           _f_ = [0, caml_call1(Definicije_Stanje[1], cst_q1), _g_];
+         return [0, _f_];
+        }
+       }
+       return [0, [0, caml_call1(Definicije_Stanje[1], cst_q3), sklad]];
+    }
    }
    function zacetno_stanje(avtomat){return avtomat[2];}
    function seznam_stanj(avtomat){return avtomat[1];}
@@ -91,45 +211,122 @@
    }
    var
     q0 = caml_call1(Definicije_Stanje[1], cst_q0),
-    q1 = caml_call1(Definicije_Stanje[1], cst_q1),
-    q2 = caml_call1(Definicije_Stanje[1], cst_q2),
-    enke_1mod3 =
+    q1 = caml_call1(Definicije_Stanje[1], cst_q1$0),
+    q2 = caml_call1(Definicije_Stanje[1], cst_q2$0),
+    q3 = caml_call1(Definicije_Stanje[1], cst_q3$0),
+    oklepaji =
       dodaj_prehod
-       (q2,
-        49,
-        q0,
+       (q3,
+        123,
+        q3,
         dodaj_prehod
-         (q1,
-          49,
-          q2,
+         (q3,
+          125,
+          q3,
           dodaj_prehod
-           (q0,
-            49,
-            q1,
+           (q2,
+            125,
+            q3,
             dodaj_prehod
              (q2,
-              48,
-              q2,
+              123,
+              q1,
               dodaj_prehod
                (q1,
-                48,
-                q1,
+                125,
+                q2,
                 dodaj_prehod
-                 (q0,
-                  48,
-                  q0,
-                  dodaj_nesprejemno_stanje
-                   (q2, dodaj_sprejemno_stanje(q1, prazen_avtomat(q0)))))))));
-   function preberi_niz(avtomat, q, niz){
-    function aux(acc, znak){
-     if(! acc) return 0;
-     var q = acc[1];
-     return prehodna_funkcija(avtomat, q, znak);
-    }
-    var _a_ = caml_call1(Stdlib_String[39], niz);
-    return caml_call1(caml_call2(Stdlib_Seq[5], aux, [0, q]), _a_);
-   }
-   var
+                 (q1,
+                  125,
+                  q1,
+                  dodaj_prehod
+                   (q1,
+                    123,
+                    q1,
+                    dodaj_prehod
+                     (q0,
+                      125,
+                      q3,
+                      dodaj_prehod
+                       (q0,
+                        123,
+                        q1,
+                        dodaj_prehod
+                         (q3,
+                          91,
+                          q3,
+                          dodaj_prehod
+                           (q3,
+                            93,
+                            q3,
+                            dodaj_prehod
+                             (q2,
+                              93,
+                              q3,
+                              dodaj_prehod
+                               (q2,
+                                91,
+                                q1,
+                                dodaj_prehod
+                                 (q1,
+                                  93,
+                                  q2,
+                                  dodaj_prehod
+                                   (q1,
+                                    93,
+                                    q1,
+                                    dodaj_prehod
+                                     (q1,
+                                      91,
+                                      q1,
+                                      dodaj_prehod
+                                       (q0,
+                                        93,
+                                        q3,
+                                        dodaj_prehod
+                                         (q0,
+                                          91,
+                                          q1,
+                                          dodaj_prehod
+                                           (q3,
+                                            40,
+                                            q3,
+                                            dodaj_prehod
+                                             (q3,
+                                              41,
+                                              q3,
+                                              dodaj_prehod
+                                               (q2,
+                                                41,
+                                                q3,
+                                                dodaj_prehod
+                                                 (q2,
+                                                  40,
+                                                  q1,
+                                                  dodaj_prehod
+                                                   (q1,
+                                                    41,
+                                                    q2,
+                                                    dodaj_prehod
+                                                     (q1,
+                                                      41,
+                                                      q1,
+                                                      dodaj_prehod
+                                                       (q1,
+                                                        40,
+                                                        q1,
+                                                        dodaj_prehod
+                                                         (q0,
+                                                          41,
+                                                          q3,
+                                                          dodaj_prehod
+                                                           (q0,
+                                                            40,
+                                                            q1,
+                                                            dodaj_nesprejemno_stanje
+                                                             (q3,
+                                                              dodaj_nesprejemno_stanje
+                                                               (q1, dodaj_sprejemno_stanje(q2, prazen_avtomat(q0))))))))))))))))))))))))))))))),
     Definicije_Avtomat =
       [0,
        prazen_avtomat,
@@ -141,9 +338,8 @@
        seznam_stanj,
        seznam_prehodov,
        je_sprejemno_stanje,
-       enke_1mod3,
-       preberi_niz];
-   runtime.caml_register_global(7, Definicije_Avtomat, "Definicije__Avtomat");
+       oklepaji];
+   runtime.caml_register_global(13, Definicije_Avtomat, "Definicije__Avtomat");
    return;
   }
   (globalThis));
@@ -202,7 +398,7 @@
   (globalThis));
 
 //# unitInfo: Provides: Definicije__ZagnaniAvtomat
-//# unitInfo: Requires: Definicije__Avtomat, Definicije__Trak
+//# unitInfo: Requires: Definicije__Avtomat, Definicije__Sklad, Definicije__Trak
 (function
   (globalThis){
    "use strict";
@@ -217,30 +413,41 @@
             ? f(a0, a1)
             : runtime.caml_call_gen(f, [a0, a1]);
    }
-   function caml_call3(f, a0, a1, a2){
-    return (f.l >= 0 ? f.l : f.l = f.length) == 3
-            ? f(a0, a1, a2)
-            : runtime.caml_call_gen(f, [a0, a1, a2]);
+   function caml_call4(f, a0, a1, a2, a3){
+    return (f.l >= 0 ? f.l : f.l = f.length) == 4
+            ? f(a0, a1, a2, a3)
+            : runtime.caml_call_gen(f, [a0, a1, a2, a3]);
    }
    var
     global_data = runtime.caml_get_global_data(),
     Definicije_Avtomat = global_data.Definicije__Avtomat,
-    Definicije_Trak = global_data.Definicije__Trak;
+    Definicije_Trak = global_data.Definicije__Trak,
+    Definicije_Sklad = global_data.Definicije__Sklad;
    function pozeni(avtomat, trak){
-    return [0, avtomat, trak, caml_call1(Definicije_Avtomat[6], avtomat)];
+    var _b_ = Definicije_Sklad[1];
+    return [0, avtomat, trak, caml_call1(Definicije_Avtomat[6], avtomat), _b_];
    }
    function avtomat(param){var avtomat = param[1]; return avtomat;}
    function trak(param){var trak = param[2]; return trak;}
    function stanje(param){var stanje = param[3]; return stanje;}
    function korak_naprej(param){
-    var stanje = param[3], trak = param[2], avtomat = param[1];
+    var
+     sklad = param[4],
+     stanje = param[3],
+     trak = param[2],
+     avtomat = param[1];
     if(caml_call1(Definicije_Trak[3], trak)) return 0;
     var
      _a_ = caml_call1(Definicije_Trak[2], trak),
-     stanje$0 = caml_call3(Definicije_Avtomat[5], avtomat, stanje, _a_);
+     stanje$0 = caml_call4(Definicije_Avtomat[5], avtomat, sklad, stanje, _a_);
     if(! stanje$0) return 0;
-    var stanje$1 = stanje$0[1];
-    return [0, [0, avtomat, caml_call1(Definicije_Trak[4], trak), stanje$1]];
+    var match = stanje$0[1], nov_sklad = match[2], novo_stanje = match[1];
+    return [0,
+            [0,
+             avtomat,
+             caml_call1(Definicije_Trak[4], trak),
+             novo_stanje,
+             nov_sklad]];
    }
    function je_v_sprejemnem_stanju(param){
     var stanje = param[3], avtomat = param[1];
@@ -250,46 +457,9 @@
     Definicije_ZagnaniAvtomat =
       [0, pozeni, avtomat, trak, stanje, korak_naprej, je_v_sprejemnem_stanju];
    runtime.caml_register_global
-    (2, Definicije_ZagnaniAvtomat, "Definicije__ZagnaniAvtomat");
+    (3, Definicije_ZagnaniAvtomat, "Definicije__ZagnaniAvtomat");
    return;
   }
   (globalThis));
 
-//# unitInfo: Provides: Definicije__Sklad
-//# unitInfo: Requires: Stdlib
-(function
-  (globalThis){
-   "use strict";
-   var
-    runtime = globalThis.jsoo_runtime,
-    cst_Sklad_je_prazen$1 = "Sklad je prazen";
-   function caml_call1(f, a0){
-    return (f.l >= 0 ? f.l : f.l = f.length) == 1
-            ? f(a0)
-            : runtime.caml_call_gen(f, [a0]);
-   }
-   var
-    global_data = runtime.caml_get_global_data(),
-    Stdlib = global_data.Stdlib,
-    cst_Sklad_je_prazen$0 = cst_Sklad_je_prazen$1,
-    cst_Sklad_je_prazen = cst_Sklad_je_prazen$1,
-    prazen_sklad = 0;
-   function je_prazen(sklad){return sklad ? 0 : 1;}
-   function dodaj(element, sklad){return [0, element, sklad];}
-   function odstrani(sklad){
-    if(! sklad) return caml_call1(Stdlib[2], cst_Sklad_je_prazen);
-    var xs = sklad[2];
-    return xs;
-   }
-   function vrh(sklad){
-    if(! sklad) return caml_call1(Stdlib[2], cst_Sklad_je_prazen$0);
-    var x = sklad[1];
-    return x;
-   }
-   var Definicije_Sklad = [0, prazen_sklad, je_prazen, dodaj, odstrani, vrh];
-   runtime.caml_register_global(3, Definicije_Sklad, "Definicije__Sklad");
-   return;
-  }
-  (globalThis));
-
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLjAsImZpbGUiOiIuZGVmaW5pY2lqZS5vYmpzL2pzb28vZGVmYXVsdC9kZWZpbmljaWplLmNtYS5qcyIsInNvdXJjZVJvb3QiOiIiLCJuYW1lcyI6WyJpel9uaXphIiwib3puYWthIiwidl9uaXoiLCJwcmF6ZW5fYXZ0b21hdCIsInphY2V0bm9fc3RhbmplIiwiZG9kYWpfbmVzcHJlamVtbm9fc3RhbmplIiwic3RhbmplIiwiYXZ0b21hdCIsImRvZGFqX3NwcmVqZW1ub19zdGFuamUiLCJkb2Rhal9wcmVob2QiLCJzdGFuamUxIiwiem5hayIsInN0YW5qZTIiLCJwcmVob2RuYV9mdW5rY2lqYSIsInpuYWskMCIsInNlem5hbV9zdGFuaiIsInNlem5hbV9wcmVob2RvdiIsImplX3NwcmVqZW1ub19zdGFuamUiLCJxMCIsInExIiwicTIiLCJlbmtlXzFtb2QzIiwicHJlYmVyaV9uaXoiLCJxIiwibml6IiwiYXV4IiwiYWNjIiwidHJlbnV0bmlfem5hayIsInRyYWsiLCJqZV9uYV9rb25jdSIsInByZW1ha25pX25hcHJlaiIsInByYXplbiIsInByZWJyYW5pIiwibmVwcmVicmFuaSIsInBvemVuaSIsImtvcmFrX25hcHJlaiIsInN0YW5qZSQwIiwic3RhbmplJDEiLCJqZV92X3NwcmVqZW1uZW1fc3Rhbmp1IiwicHJhemVuX3NrbGFkIiwiamVfcHJhemVuIiwic2tsYWQiLCJkb2RhaiIsImVsZW1lbnQiLCJvZHN0cmFuaSIsInhzIiwidnJoIiwieCJdLCJzb3VyY2VzIjpbIi93b3Jrc3BhY2Vfcm9vdC9zcmMvZGVmaW5pY2lqZS9zdGFuamUubWwiLCIvd29ya3NwYWNlX3Jvb3Qvc3JjL2RlZmluaWNpamUvYXZ0b21hdC5tbCIsIi93b3Jrc3BhY2Vfcm9vdC9zcmMvZGVmaW5pY2lqZS90cmFrLm1sIiwiL3dvcmtzcGFjZV9yb290L3NyYy9kZWZpbmljaWplL3phZ25hbmlBdnRvbWF0Lm1sIiwiL3dvcmtzcGFjZV9yb290L3NyYy9kZWZpbmljaWplL3NrbGFkLm1sIl0sIm1hcHBpbmdz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Q0hDLFdBTEhEO0lBTUEsZUFUVzdCLFNBU1ksK0JBVEhxQixPQVFqQlM7O1lBR1BDO1FBQWtDaEMsbUJBQVRDO0lBQzNCLE9BQUEsa0NBRDJCQSxTQUFTRDs7OztVQWxCbEM0QixRQUdBM0IsU0FDQXFCLE1BQ0F0QixRQUVBNkIsY0FXQUc7Ozs7RTs7Ozs7Ozs7Ozs7Rzs7Ozs7Ozs7OztJQ2xCQUM7WUFFQUMsVUFBVUMsT0FDWixPQURZQSxjQUdPO1lBRWpCQyxNQUFNQyxTQUFRRixPQUFRLFdBQWhCRSxTQUFRRixPQUF3QjtZQUV0Q0csU0FBU0g7SUFDWCxLQURXQSxPQUVELE9BQUE7UUFDREksS0FIRUo7SUFHSSxPQUFOSTtHQUFRO1lBRWZDLElBQUlMO0lBQ04sS0FETUEsT0FFSSxPQUFBO1FBQ05NLElBSEVOO0lBR1EsT0FBVk07R0FBVzs4QkFqQmJSLGNBRUFDLFdBS0FFLE9BRUFFLFVBS0FFOzs7RSIsInNvdXJjZXNDb250ZW50IjpbInR5cGUgdCA9IHsgb3puYWthIDogc3RyaW5nIH1cclxuXHJcbmxldCBpel9uaXphIG96bmFrYSA9IHsgb3puYWthIH1cclxubGV0IHZfbml6IHsgb3puYWthIH0gPSBvem5ha2FcclxuIiwidHlwZSBzdGFuamUgPSBTdGFuamUudFxyXG5cclxudHlwZSB0ID0ge1xyXG4gIHN0YW5qYSA6IHN0YW5qZSBsaXN0O1xyXG4gIHphY2V0bm9fc3RhbmplIDogc3RhbmplO1xyXG4gIHNwcmVqZW1uYV9zdGFuamEgOiBzdGFuamUgbGlzdDtcclxuICBwcmVob2RpIDogKHN0YW5qZSAqIGNoYXIgKiBzdGFuamUpIGxpc3Q7XHJcbn1cclxuXHJcbmxldCBwcmF6ZW5fYXZ0b21hdCB6YWNldG5vX3N0YW5qZSA9XHJcbiAge1xyXG4gICAgc3RhbmphID0gWyB6YWNldG5vX3N0YW5qZSBdO1xyXG4gICAgemFjZXRub19zdGFuamU7XHJcbiAgICBzcHJlamVtbmFfc3RhbmphID0gW107XHJcbiAgICBwcmVob2RpID0gW107XHJcbiAgfVxyXG5cclxubGV0IGRvZGFqX25lc3ByZWplbW5vX3N0YW5qZSBzdGFuamUgYXZ0b21hdCA9XHJcbiAgeyBhdnRvbWF0IHdpdGggc3RhbmphID0gc3RhbmplIDo6IGF2dG9tYXQuc3RhbmphIH1cclxuXHJcbmxldCBkb2Rhal9zcHJlamVtbm9fc3RhbmplIHN0YW5qZSBhdnRvbWF0ID1cclxuICB7XHJcbiAgICBhdnRvbWF0IHdpdGhcclxuICAgIHN0YW5qYSA9IHN0YW5qZSA6OiBhdnRvbWF0LnN0YW5qYTtcclxuICAgIHNwcmVqZW1uYV9zdGFuamEgPSBzdGFuamUgOjogYXZ0b21hdC5zcHJlamVtbmFfc3RhbmphO1xyXG4gIH1cclxuXHJcbmxldCBkb2Rhal9wcmVob2Qgc3RhbmplMSB6bmFrIHN0YW5qZTIgYXZ0b21hdCA9XHJcbiAgeyBhdnRvbWF0IHdpdGggcHJlaG9kaSA9IChzdGFuamUxLCB6bmFrLCBzdGFuamUyKSA6OiBhdnRvbWF0LnByZWhvZGkgfVxyXG5cclxubGV0IHByZWhvZG5hX2Z1bmtjaWphIGF2dG9tYXQgc3RhbmplIHpuYWsgPVxyXG4gIG1hdGNoXHJcbiAgICBMaXN0LmZpbmRfb3B0XHJcbiAgICAgIChmdW4gKHN0YW5qZTEsIHpuYWsnLCBfc3RhbmplMikgLT4gc3RhbmplMSA9IHN0YW5qZSAmJiB6bmFrID0gem5haycpXHJcbiAgICAgIGF2dG9tYXQucHJlaG9kaVxyXG4gIHdpdGhcclxuICB8IE5vbmUgLT4gTm9uZVxyXG4gIHwgU29tZSAoXywgXywgc3RhbmplMikgLT4gU29tZSBzdGFuamUyXHJcblxyXG5sZXQgemFjZXRub19zdGFuamUgYXZ0b21hdCA9IGF2dG9tYXQuemFjZXRub19zdGFuamVcclxubGV0IHNlem5hbV9zdGFuaiBhdnRvbWF0ID0gYXZ0b21hdC5zdGFuamFcclxubGV0IHNlem5hbV9wcmVob2RvdiBhdnRvbWF0ID0gYXZ0b21hdC5wcmVob2RpXHJcblxyXG5sZXQgamVfc3ByZWplbW5vX3N0YW5qZSBhdnRvbWF0IHN0YW5qZSA9XHJcbiAgTGlzdC5tZW0gc3RhbmplIGF2dG9tYXQuc3ByZWplbW5hX3N0YW5qYVxyXG5cclxubGV0IGVua2VfMW1vZDMgPVxyXG4gIGxldCBxMCA9IFN0YW5qZS5pel9uaXphIFwicTBcIlxyXG4gIGFuZCBxMSA9IFN0YW5qZS5pel9uaXphIFwicTFcIlxyXG4gIGFuZCBxMiA9IFN0YW5qZS5pel9uaXphIFwicTJcIiBpblxyXG4gIHByYXplbl9hdnRvbWF0IHEwIHw+IGRvZGFqX3NwcmVqZW1ub19zdGFuamUgcTFcclxuICB8PiBkb2Rhal9uZXNwcmVqZW1ub19zdGFuamUgcTJcclxuICB8PiBkb2Rhal9wcmVob2QgcTAgJzAnIHEwIHw+IGRvZGFqX3ByZWhvZCBxMSAnMCcgcTEgfD4gZG9kYWpfcHJlaG9kIHEyICcwJyBxMlxyXG4gIHw+IGRvZGFqX3ByZWhvZCBxMCAnMScgcTEgfD4gZG9kYWpfcHJlaG9kIHExICcxJyBxMiB8PiBkb2Rhal9wcmVob2QgcTIgJzEnIHEwXHJcblxyXG5sZXQgcHJlYmVyaV9uaXogYXZ0b21hdCBxIG5peiA9XHJcbiAgbGV0IGF1eCBhY2Mgem5hayA9XHJcbiAgICBtYXRjaCBhY2Mgd2l0aCBOb25lIC0+IE5vbmUgfCBTb21lIHEgLT4gcHJlaG9kbmFfZnVua2NpamEgYXZ0b21hdCBxIHpuYWtcclxuICBpblxyXG4gIG5peiB8PiBTdHJpbmcudG9fc2VxIHw+IFNlcS5mb2xkX2xlZnQgYXV4IChTb21lIHEpXHJcbiIsInR5cGUgdCA9IHsgbml6IDogc3RyaW5nOyBpbmRla3NfdHJlbnV0bmVnYV96bmFrYSA6IGludCB9XHJcblxyXG5sZXQgdHJlbnV0bmlfem5hayB0cmFrID0gU3RyaW5nLmdldCB0cmFrLm5peiB0cmFrLmluZGVrc190cmVudXRuZWdhX3puYWthXHJcbmxldCBqZV9uYV9rb25jdSB0cmFrID0gU3RyaW5nLmxlbmd0aCB0cmFrLm5peiA9IHRyYWsuaW5kZWtzX3RyZW51dG5lZ2Ffem5ha2FcclxuXHJcbmxldCBwcmVtYWtuaV9uYXByZWogdHJhayA9XHJcbiAgeyB0cmFrIHdpdGggaW5kZWtzX3RyZW51dG5lZ2Ffem5ha2EgPSBzdWNjIHRyYWsuaW5kZWtzX3RyZW51dG5lZ2Ffem5ha2EgfVxyXG5cclxubGV0IGl6X25pemEgbml6ID0geyBuaXo7IGluZGVrc190cmVudXRuZWdhX3puYWthID0gMCB9XHJcbmxldCBwcmF6ZW4gPSBpel9uaXphIFwiXCJcclxubGV0IHZfbml6IHRyYWsgPSB0cmFrLm5pelxyXG5cclxubGV0IHByZWJyYW5pIHRyYWsgPSBTdHJpbmcuc3ViIHRyYWsubml6IDAgdHJhay5pbmRla3NfdHJlbnV0bmVnYV96bmFrYVxyXG5cclxuYW5kIG5lcHJlYnJhbmkgdHJhayA9XHJcbiAgU3RyaW5nLnN1YiB0cmFrLm5peiB0cmFrLmluZGVrc190cmVudXRuZWdhX3puYWthXHJcbiAgICAoU3RyaW5nLmxlbmd0aCB0cmFrLm5peiAtIHRyYWsuaW5kZWtzX3RyZW51dG5lZ2Ffem5ha2EpXHJcbiIsInR5cGUgdCA9IHsgYXZ0b21hdCA6IEF2dG9tYXQudDsgdHJhayA6IFRyYWsudDsgc3RhbmplIDogU3RhbmplLnQgfVxyXG5cclxubGV0IHBvemVuaSBhdnRvbWF0IHRyYWsgPVxyXG4gIHsgYXZ0b21hdDsgdHJhazsgc3RhbmplID0gQXZ0b21hdC56YWNldG5vX3N0YW5qZSBhdnRvbWF0IH1cclxuXHJcbmxldCBhdnRvbWF0IHsgYXZ0b21hdDsgXyB9ID0gYXZ0b21hdFxyXG5sZXQgdHJhayB7IHRyYWs7IF8gfSA9IHRyYWtcclxubGV0IHN0YW5qZSB7IHN0YW5qZTsgXyB9ID0gc3RhbmplXHJcblxyXG5sZXQga29yYWtfbmFwcmVqIHsgYXZ0b21hdDsgdHJhazsgc3RhbmplIH0gPVxyXG4gIGlmIFRyYWsuamVfbmFfa29uY3UgdHJhayB0aGVuIE5vbmVcclxuICBlbHNlXHJcbiAgICBsZXQgc3RhbmplJyA9XHJcbiAgICAgIEF2dG9tYXQucHJlaG9kbmFfZnVua2NpamEgYXZ0b21hdCBzdGFuamUgKFRyYWsudHJlbnV0bmlfem5hayB0cmFrKVxyXG4gICAgaW5cclxuICAgIG1hdGNoIHN0YW5qZScgd2l0aFxyXG4gICAgfCBOb25lIC0+IE5vbmVcclxuICAgIHwgU29tZSBzdGFuamUnIC0+XHJcbiAgICAgICAgU29tZSB7IGF2dG9tYXQ7IHRyYWsgPSBUcmFrLnByZW1ha25pX25hcHJlaiB0cmFrOyBzdGFuamUgPSBzdGFuamUnIH1cclxuXHJcbmxldCBqZV92X3NwcmVqZW1uZW1fc3Rhbmp1IHsgYXZ0b21hdDsgc3RhbmplOyBfIH0gPVxyXG4gIEF2dG9tYXQuamVfc3ByZWplbW5vX3N0YW5qZSBhdnRvbWF0IHN0YW5qZVxyXG4iLCJ0eXBlICdhIHQgPSAnYSBsaXN0XG5cbmxldCBwcmF6ZW5fc2tsYWQgPSBbXVxuXG5sZXQgamVfcHJhemVuIHNrbGFkID0gXG4gIG1hdGNoIHNrbGFkIHdpdGggXG4gICAgfCBbXSAtPiB0cnVlXG4gICAgfCBfIDo6IF8gLT4gZmFsc2VcblxubGV0IGRvZGFqIGVsZW1lbnQgc2tsYWQgPSBlbGVtZW50IDo6IHNrbGFkXG5cbmxldCBvZHN0cmFuaSBza2xhZCA9IFxuICBtYXRjaCBza2xhZCB3aXRoIFxuICAgIHwgW10gLT4gZmFpbHdpdGggXCJTa2xhZCBqZSBwcmF6ZW5cIlxuICAgIHwgXyA6OiB4cyAtPiB4c1xuXG5sZXQgdnJoIHNrbGFkID0gXG4gIG1hdGNoIHNrbGFkIHdpdGggXG4gICAgfCBbXSAtPiBmYWlsd2l0aCBcIlNrbGFkIGplIHByYXplblwiXG4gICAgfCB4IDo6IF8gLT4geFxuXG4iXX0=
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLjAsImZpbGUiOiIuZGVmaW5pY2lqZS5vYmpzL2pzb28vZGVmYXVsdC9kZWZpbmljaWplLmNtYS5qcyIsInNvdXJjZVJvb3QiOiIiLCJuYW1lcyI6WyJwcmF6ZW5fc2tsYWQiLCJqZV9wcmF6ZW4iLCJza2xhZCIsImRvZGFqIiwiZWxlbWVudCIsIm9kc3RyYW5pIiwieHMiLCJ2cmgiLCJ4IiwiaXpfbml6YSIsIm96bmFrYSIsInZfbml6IiwicHJhemVuX2F2dG9tYXQiLCJ6YWNldG5vX3N0YW5qZSIsImRvZGFqX25lc3ByZWplbW5vX3N0YW5qZSIsInN0YW5qZSIsImF2dG9tYXQiLCJkb2Rhal9zcHJlamVtbm9fc3RhbmplIiwiZG9kYWpfcHJlaG9kIiwic3RhbmplMSIsInpuYWsiLCJzdGFuamUyIiwicHJlaG9kbmFfZnVua2NpamEiLCJ6YXBydF9va2xlcGFqIiwic2V6bmFtX3N0YW5qIiwic2V6bmFtX3ByZWhvZG92IiwiamVfc3ByZWplbW5vX3N0YW5qZSIsInEwIiwicTEiLCJxMiIsInEzIiwib2tsZXBhamkiLCJ0cmVudXRuaV96bmFrIiwidHJhayIsImplX25hX2tvbmN1IiwicHJlbWFrbmlfbmFwcmVqIiwibml6IiwicHJhemVuIiwicHJlYnJhbmkiLCJuZXByZWJyYW5pIiwicG96ZW5pIiwia29yYWtfbmFwcmVqIiwic3RhbmplJDAiLCJub3Zfc2tsYWQiLCJub3ZvX3N0YW5qZSIsImplX3Zfc3ByZWplbW5lbV9zdGFuanUiXSwic291cmNlcyI6WyIvd29ya3NwYWNlX3Jvb3Qvc3JjL2RlZmluaWNpamUvc2tsYWQubWwiLCIvd29ya3NwYWNlX3Jvb3Qvc3JjL2RlZmluaWNpamUvc3RhbmplLm1sIiwiL3dvcmtzcGFjZV9yb290L3NyYy9kZWZpbmljaWplL2F2dG9tYXQubWwiLCIvd29ya3NwYWNlX3Jvb3Qvc3JjL2RlZmluaWNpamUvdHJhay5tbCIsIi93b3Jrc3BhY2Vfcm9vdC9zcmMvZGVmaW5pY2lqZS96YWduYW5pQXZ0b21hdC5tbCJdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7OztFOzs7Ozs7Ozs7OztHOzs7Ozs7Ozs7O0lBRUlBO1lBRUFDLFVBQVVDLE9BQ1osT0FEWUEsY0FHSztZQUVmQyxNQUFNQyxTQUFRRixPQUFRLFdBQWhCRSxTQUFRRixPQUF3QjtZQUV0Q0csU0FBU0g7SUFDWCxLQURXQSxPQUVILE9BQUE7UUFDREksS0FISUo7SUFHRSxPQUFOSTtHQUFRO1lBRWJDLElBQUlMO0lBQ04sS0FETUEsT0FFRSxPQUFBO1FBQ05NLElBSElOO0lBR00sT0FBVk07R0FBVzs4QkFqQlhSLGNBRUFDLFdBS0FFLE9BRUFFLFVBS0FFOzs7RTs7Ozs7OztZQ2RBRSxRQUFRQyxRQUFTLFdBQVRBLFFBQW1CO1lBQzNCQyxpQkFBUUQsbUJBQVcsT0FBWEE7K0JBRFJELFNBQ0FFOzs7RTs7Ozs7Ozs7Ozs7OztHOzs7OztHOzs7Ozs7Ozs7Ozs7Ozs7Ozs7O1lDUUFDLGVBQWVDO0lBQ2pCO2dCQURpQkE7WUFBQUE7Ozs7R0FPaEI7WUFFQ0MseUJBQXlCQyxRQUFPQztJQUNsQztnQkFEMkJELFFBQU9DO1lBQUFBO1lBQUFBO1lBQUFBO1lBQUFBO0dBQ2dCO1lBRWhEQyx1QkFBdUJGLFFBQU9DO0lBQ2hDO2dCQUR5QkQsUUFBT0M7WUFBQUE7Z0JBQVBELFFBQU9DO1lBQUFBO1lBQUFBO0dBSy9CO1lBRUNFLGFBQWFDLFNBQVFDLE1BQUtDLFNBQVFMO0lBQ3BDO1lBRG9DQTtZQUFBQTtZQUFBQTtvQkFBckJHLFNBQVFDLE1BQUtDLFVBQVFMO1lBQUFBO0dBQ2tDO1lBU3BFTSxrQkFBa0JOLFNBQVFkLE9BQU1hLFFBQU9RO0lBQ3pDLFVBRG9CUDs7S0FFWjtNQUFlSTtNQUFURDtNQUE2QixNQUFBLG1CQUE3QkEsU0FGb0JKO01BRVMsWUFGRlEsa0JBRWxCSDs7SUFBcUQ7SUFEdEUsWUFBQTtnQkFJRjtRQUNVQztJQUNaLFNBUHVDRTtlQUFBQTtlQUFBQTtjQUFBQTs7Ozs7OztrQkFBQUE7YUFBQUE7Ozs7Ozs7bUJBQUFBOzttQkFBQUE7OztPQWlCakM7O09BUEY7O2dCQUpRRjtnQkFJTyxnQ0FWb0JFLGVBQWJyQjs7T0FZUTs7U0FBekIsZ0NBWmlCQTs7O1VBWVE7WUFBQSxpQ0FaRmE7OztrQkFBT1E7OztrQkFBQUE7OztvQkFBQUE7O2tCQUZsQztXQWMyRCxnQ0FadENyQjtTQWVPLFVBQUEsZ0NBZlBBO1NBZVQsR0FBQTtVQUFrRTtXQUFBLE1BQUEsZ0NBZnpEQTtxQkFlb0M7O1VBQXNFO1dBQUEsTUFBQSxnQ0FmMUdBO3FCQWVxRjtTQUF2Rzs7O09BRkEsZUFBSywwQ0FiYUE7O0dBa0J2QjtZQUVIVyxlQUFlRyxTQUFVLE9BQVZBLFdBQWdDO1lBQy9DUSxhQUFhUixTQUFVLE9BQVZBLFdBQXdCO1lBQ3JDUyxnQkFBZ0JULFNBQVUsT0FBVkEsV0FBeUI7WUFFekNVLG9CQUFvQlYsU0FBUUQ7SUFDOUIsbUNBRDhCQSxRQUFSQztHQUNrQjtHQUcvQjtJQUFMVyxLQUFLO0lBQ0xDLEtBQUs7SUFDTEMsS0FBSztJQUNMQyxLQUFLO0lBSlBDO01BckNBYjtRQXlDRVk7O1FBQUFBO1FBekNGWjtVQXlDRVk7O1VBQUFBO1VBekNGWjtZQXdDRVc7O1lBQ0FDO1lBekNGWjtjQXdDRVc7O2NBREFEO2NBdkNGVjtnQkF1Q0VVOztnQkFDQUM7Z0JBeENGWDtrQkF1Q0VVOztrQkFBQUE7a0JBdkNGVjtvQkF1Q0VVOztvQkFBQUE7b0JBdkNGVjtzQkFzQ0VTOztzQkFHQUc7c0JBekNGWjt3QkFzQ0VTOzt3QkFDQUM7d0JBdkNGVjswQkF5Q0VZOzswQkFBQUE7MEJBekNGWjs0QkF5Q0VZOzs0QkFBQUE7NEJBekNGWjs4QkF3Q0VXOzs4QkFDQUM7OEJBekNGWjtnQ0F3Q0VXOztnQ0FEQUQ7Z0NBdkNGVjtrQ0F1Q0VVOztrQ0FDQUM7a0NBeENGWDtvQ0F1Q0VVOztvQ0FBQUE7b0NBdkNGVjtzQ0F1Q0VVOztzQ0FBQUE7c0NBdkNGVjt3Q0FzQ0VTOzt3Q0FHQUc7d0NBekNGWjswQ0FzQ0VTOzswQ0FDQUM7MENBdkNGVjs0Q0F5Q0VZOzs0Q0FBQUE7NENBekNGWjs4Q0F5Q0VZOzs4Q0FBQUE7OENBekNGWjtnREF3Q0VXOztnREFDQUM7Z0RBekNGWjtrREF3Q0VXOztrREFEQUQ7a0RBdkNGVjtvREF1Q0VVOztvREFDQUM7b0RBeENGWDtzREF1Q0VVOztzREFBQUE7c0RBdkNGVjt3REF1Q0VVOzt3REFBQUE7d0RBdkNGVjswREFzQ0VTOzswREFHQUc7MERBekNGWjs0REFzQ0VTOzs0REFDQUM7NERBakRGZDs4REFtREVnQjs4REFuREZoQjtnRUFpREVjLElBOUNGWCx1QkErQ0VZLElBM0RGakIsZUF5REVlOzs7T0F6REZmO09BU0FFO09BR0FHO09BT0FDO09BVUFJO09Bb0JBVDtPQUNBVztPQUNBQztPQUVBQztPQUdBSzs7O0U7Ozs7Ozs7Ozs7O0c7Ozs7Ozs7OztZQ2pFQUMsY0FBY0M7SUFBTyxPQUFBLHdCQUFQQSxTQUFBQTtHQUF1RDtZQUNyRUMsWUFBWUQ7SUFBTyw2QkFBUEEsYUFBQUE7R0FBNEQ7WUFFeEVFLGdCQUFnQkYsTUFDbEIsV0FEa0JBLFNBQUFBLGlCQUN1RDtZQUV2RXhCLFFBQVEyQixLQUFNLFdBQU5BLFFBQTBDO0dBQ3pDLElBQVRDLFNBREE1QjtZQUVBRSxNQUFNc0IsTUFBTyxPQUFQQSxRQUFlO1lBRXJCSyxTQUFTTDtJQUFPLHFDQUFQQSxZQUFBQTtHQUF5RDtZQUVsRU0sV0FBV047SUFDYjs7YUFEYUE7YUFBQUE7bUNBQUFBLFdBQUFBO0dBRTRDOzs7O09BUHZESTtPQVBBTDtPQUNBRTtPQUVBQztPQUdBMUI7T0FFQUU7T0FFQTJCO09BRUFDOzs7RTs7Ozs7Ozs7O0c7Ozs7O0c7Ozs7O0c7Ozs7Ozs7Ozs7WUNaQUMsT0FBT3hCLFNBQVFpQjtJQUNqQjtJQUFBLFdBRFNqQixTQUFRaUIsTUFDUyxrQ0FEakJqQjtHQUM0RTtZQUVuRkEsbUJBQVVBLG9CQUFlLE9BQWZBO1lBQ1ZpQixnQkFBT0EsaUJBQVksT0FBWkE7WUFDUGxCLGtCQUFTQSxtQkFBYyxPQUFkQTtZQUVUMEI7O0tBQXNDdkM7S0FBUmE7S0FBTmtCO0tBQVRqQjtJQUNkLEdBQUEsK0JBRHVCaUIsT0FDSTtJQUdxQjtLQUFBLE1BQUEsK0JBSnpCQTtLQUdwQlMsV0FDRixrQ0FKYTFCLFNBQXVCZCxPQUFSYTtJQU05QixLQUhJMkIsVUFJTTtnQkFKTkEsYUFLaUJDLHNCQUFiQztJQUNKOzthQVRXNUI7YUFTWSwrQkFUSGlCO2FBUWhCVzthQUFhRDs7WUFHckJFO1FBQWtDOUIsbUJBQVRDO0lBQzNCLE9BQUEsa0NBRDJCQSxTQUFTRDs7OztVQWxCbEN5QixRQUdBeEIsU0FDQWlCLE1BQ0FsQixRQUVBMEIsY0FXQUk7Ozs7RSIsInNvdXJjZXNDb250ZW50IjpbInR5cGUgJ2EgdCA9ICdhIGxpc3RcblxubGV0IHByYXplbl9za2xhZCA9IFtdXG5cbmxldCBqZV9wcmF6ZW4gc2tsYWQgPSBcbiAgbWF0Y2ggc2tsYWQgd2l0aCBcbiAgfCBbXSAtPiB0cnVlXG4gIHwgXyA6OiBfIC0+IGZhbHNlXG5cbmxldCBkb2RhaiBlbGVtZW50IHNrbGFkID0gZWxlbWVudCA6OiBza2xhZFxuXG5sZXQgb2RzdHJhbmkgc2tsYWQgPSBcbiAgbWF0Y2ggc2tsYWQgd2l0aCBcbiAgfCBbXSAtPiBmYWlsd2l0aCBcIlNrbGFkIGplIHByYXplblwiXG4gIHwgXyA6OiB4cyAtPiB4c1xuXG5sZXQgdnJoIHNrbGFkID0gXG4gIG1hdGNoIHNrbGFkIHdpdGggXG4gIHwgW10gLT4gZmFpbHdpdGggXCJTa2xhZCBqZSBwcmF6ZW5cIlxuICB8IHggOjogXyAtPiB4IiwidHlwZSB0ID0geyBvem5ha2EgOiBzdHJpbmcgfVxyXG5cclxubGV0IGl6X25pemEgb3puYWthID0geyBvem5ha2EgfVxyXG5sZXQgdl9uaXogeyBvem5ha2EgfSA9IG96bmFrYVxyXG4iLCJ0eXBlIHN0YW5qZSA9IFN0YW5qZS50XHJcbnR5cGUgJ2Egc2tsYWQgPSAnYSBTa2xhZC50XHJcblxyXG50eXBlIHQgPSB7XHJcbiAgc3RhbmphIDogc3RhbmplIGxpc3Q7XHJcbiAgemFjZXRub19zdGFuamUgOiBzdGFuamU7XHJcbiAgc3ByZWplbW5hX3N0YW5qYSA6IHN0YW5qZSBsaXN0O1xyXG4gIHByZWhvZGkgOiAoc3RhbmplICogY2hhciAqIHN0YW5qZSkgbGlzdDtcclxuICBza2xhZCA6IGNoYXIgc2tsYWQ7XHJcbn1cclxuXHJcbmxldCBwcmF6ZW5fYXZ0b21hdCB6YWNldG5vX3N0YW5qZSA9XHJcbiAge1xyXG4gICAgc3RhbmphID0gWyB6YWNldG5vX3N0YW5qZSBdO1xyXG4gICAgemFjZXRub19zdGFuamU7XHJcbiAgICBzcHJlamVtbmFfc3RhbmphID0gW107XHJcbiAgICBwcmVob2RpID0gW107XHJcbiAgICBza2xhZCA9IFNrbGFkLnByYXplbl9za2xhZDtcclxuICB9XHJcblxyXG5sZXQgZG9kYWpfbmVzcHJlamVtbm9fc3RhbmplIHN0YW5qZSBhdnRvbWF0ID1cclxuICB7IGF2dG9tYXQgd2l0aCBzdGFuamEgPSBzdGFuamUgOjogYXZ0b21hdC5zdGFuamEgfVxyXG5cclxubGV0IGRvZGFqX3NwcmVqZW1ub19zdGFuamUgc3RhbmplIGF2dG9tYXQgPVxyXG4gIHtcclxuICAgIGF2dG9tYXQgd2l0aFxyXG4gICAgc3RhbmphID0gc3RhbmplIDo6IGF2dG9tYXQuc3RhbmphO1xyXG4gICAgc3ByZWplbW5hX3N0YW5qYSA9IHN0YW5qZSA6OiBhdnRvbWF0LnNwcmVqZW1uYV9zdGFuamE7XHJcbiAgfVxyXG5cclxubGV0IGRvZGFqX3ByZWhvZCBzdGFuamUxIHpuYWsgc3RhbmplMiBhdnRvbWF0ID1cclxuICB7IGF2dG9tYXQgd2l0aCBwcmVob2RpID0gKHN0YW5qZTEsIHpuYWssIHN0YW5qZTIpIDo6IGF2dG9tYXQucHJlaG9kaSB9XHJcblxyXG5sZXQgdXN0cmV6bmlfb2RwcnRpX29rbGVwYWogemFwcnRfb2tsZXBhaiA9XHJcbiAgbWF0Y2ggemFwcnRfb2tsZXBhaiB3aXRoXHJcbiAgfCAnKScgLT4gJygnXHJcbiAgfCAnfScgLT4gJ3snXHJcbiAgfCAnXScgLT4gJ1snXHJcbiAgfCBfIC0+IGZhaWx3aXRoKFwiUG9kYW4gem5hayBuaSB6YWtsZXBhalwiKVxyXG5cclxubGV0IHByZWhvZG5hX2Z1bmtjaWphIGF2dG9tYXQgc2tsYWQgc3RhbmplIHpuYWsgPVxyXG4gIG1hdGNoIExpc3QuZmluZF9vcHRcclxuICAgICAgICAgIChmdW4gKHN0YW5qZTEsIHpuYWsnLCBfc3RhbmplMikgLT4gc3RhbmplMSA9IHN0YW5qZSAmJiB6bmFrID0gem5haycpXHJcbiAgICAgICAgICBhdnRvbWF0LnByZWhvZGkgd2l0aFxyXG4gIHwgTm9uZSAtPiBcclxuICAgICAgTm9uZVxyXG4gIHwgU29tZSAoXywgXywgc3RhbmplMikgLT5cclxuICAgIGJlZ2luIFxyXG4gICAgICBtYXRjaCB6bmFrIHdpdGhcclxuICAgICAgfCAnKCcgfCAneycgfCAnWycgLT4gXHJcbiAgICAgICAgU29tZSAoc3RhbmplMiwgU2tsYWQuZG9kYWogem5hayBza2xhZClcclxuICAgICAgfCAnKScgfCAnfScgfCAnXScgLT4gXHJcbiAgICAgICAgICBpZiBTa2xhZC5qZV9wcmF6ZW4gc2tsYWQgfHwgU3RhbmplLnZfbml6IHN0YW5qZSA9IFwicTNcIiB8fCBTa2xhZC52cmggc2tsYWQgIT0gdXN0cmV6bmlfb2RwcnRpX29rbGVwYWogem5hayB0aGVuIFxyXG4gICAgICAgICAgICBTb21lKFN0YW5qZS5pel9uaXphIFwicTNcIiwgc2tsYWQpXHJcbiAgICAgICAgICBlbHNlIFxyXG4gICAgICAgICAgICBTb21lIChpZiBTa2xhZC5qZV9wcmF6ZW4gKFNrbGFkLm9kc3RyYW5pIHNrbGFkKSB0aGVuIChTdGFuamUuaXpfbml6YSBcInEyXCIsIFNrbGFkLm9kc3RyYW5pIHNrbGFkKSBlbHNlIChTdGFuamUuaXpfbml6YSBcInExXCIsIFNrbGFkLm9kc3RyYW5pIHNrbGFkKSlcclxuICAgICAgfCBfIC0+ICBcclxuICAgICAgICAgIE5vbmVcclxuICAgIGVuZFxyXG5cclxubGV0IHphY2V0bm9fc3RhbmplIGF2dG9tYXQgPSBhdnRvbWF0LnphY2V0bm9fc3RhbmplXHJcbmxldCBzZXpuYW1fc3RhbmogYXZ0b21hdCA9IGF2dG9tYXQuc3RhbmphXHJcbmxldCBzZXpuYW1fcHJlaG9kb3YgYXZ0b21hdCA9IGF2dG9tYXQucHJlaG9kaVxyXG5cclxubGV0IGplX3NwcmVqZW1ub19zdGFuamUgYXZ0b21hdCBzdGFuamUgPVxyXG4gIExpc3QubWVtIHN0YW5qZSBhdnRvbWF0LnNwcmVqZW1uYV9zdGFuamFcclxuICBcclxubGV0IG9rbGVwYWppID0gXHJcbiAgbGV0IHEwID0gU3RhbmplLml6X25pemEgXCJxMFwiXHJcbiAgYW5kIHExID0gU3RhbmplLml6X25pemEgXCJxMVwiXHJcbiAgYW5kIHEyID0gU3RhbmplLml6X25pemEgXCJxMlwiXHJcbiAgYW5kIHEzID0gU3RhbmplLml6X25pemEgXCJxM1wiIGluXHJcbiAgcHJhemVuX2F2dG9tYXQgcTAgfD4gZG9kYWpfc3ByZWplbW5vX3N0YW5qZSBxMlxyXG4gIHw+IGRvZGFqX25lc3ByZWplbW5vX3N0YW5qZSBxMVxyXG4gIHw+IGRvZGFqX25lc3ByZWplbW5vX3N0YW5qZSBxM1xyXG4gIHw+IGRvZGFqX3ByZWhvZCBxMCAnKCcgcTEgfD4gZG9kYWpfcHJlaG9kIHEwICcpJyBxM1xyXG4gIHw+IGRvZGFqX3ByZWhvZCBxMSAnKCcgcTFcclxuICB8PiBkb2Rhal9wcmVob2QgcTEgJyknIHExIHw+IGRvZGFqX3ByZWhvZCBxMSAnKScgcTJcclxuICB8PiBkb2Rhal9wcmVob2QgcTIgJygnIHExIHw+IGRvZGFqX3ByZWhvZCBxMiAnKScgcTNcclxuICB8PiBkb2Rhal9wcmVob2QgcTMgJyknIHEzIHw+IGRvZGFqX3ByZWhvZCBxMyAnKCcgcTMgXHJcbiAgfD4gZG9kYWpfcHJlaG9kIHEwICdbJyBxMSB8PiBkb2Rhal9wcmVob2QgcTAgJ10nIHEzXHJcbiAgfD4gZG9kYWpfcHJlaG9kIHExICdbJyBxMVxyXG4gIHw+IGRvZGFqX3ByZWhvZCBxMSAnXScgcTEgfD4gZG9kYWpfcHJlaG9kIHExICddJyBxMlxyXG4gIHw+IGRvZGFqX3ByZWhvZCBxMiAnWycgcTEgfD4gZG9kYWpfcHJlaG9kIHEyICddJyBxM1xyXG4gIHw+IGRvZGFqX3ByZWhvZCBxMyAnXScgcTMgfD4gZG9kYWpfcHJlaG9kIHEzICdbJyBxMyBcclxuICB8PiBkb2Rhal9wcmVob2QgcTAgJ3snIHExIHw+IGRvZGFqX3ByZWhvZCBxMCAnfScgcTNcclxuICB8PiBkb2Rhal9wcmVob2QgcTEgJ3snIHExXHJcbiAgfD4gZG9kYWpfcHJlaG9kIHExICd9JyBxMSB8PiBkb2Rhal9wcmVob2QgcTEgJ30nIHEyXHJcbiAgfD4gZG9kYWpfcHJlaG9kIHEyICd7JyBxMSB8PiBkb2Rhal9wcmVob2QgcTIgJ30nIHEzXHJcbiAgfD4gZG9kYWpfcHJlaG9kIHEzICd9JyBxMyB8PiBkb2Rhal9wcmVob2QgcTMgJ3snIHEzICIsInR5cGUgdCA9IHsgbml6IDogc3RyaW5nOyBpbmRla3NfdHJlbnV0bmVnYV96bmFrYSA6IGludCB9XHJcblxyXG5sZXQgdHJlbnV0bmlfem5hayB0cmFrID0gU3RyaW5nLmdldCB0cmFrLm5peiB0cmFrLmluZGVrc190cmVudXRuZWdhX3puYWthXHJcbmxldCBqZV9uYV9rb25jdSB0cmFrID0gU3RyaW5nLmxlbmd0aCB0cmFrLm5peiA9IHRyYWsuaW5kZWtzX3RyZW51dG5lZ2Ffem5ha2FcclxuXHJcbmxldCBwcmVtYWtuaV9uYXByZWogdHJhayA9XHJcbiAgeyB0cmFrIHdpdGggaW5kZWtzX3RyZW51dG5lZ2Ffem5ha2EgPSBzdWNjIHRyYWsuaW5kZWtzX3RyZW51dG5lZ2Ffem5ha2EgfVxyXG5cclxubGV0IGl6X25pemEgbml6ID0geyBuaXo7IGluZGVrc190cmVudXRuZWdhX3puYWthID0gMCB9XHJcbmxldCBwcmF6ZW4gPSBpel9uaXphIFwiXCJcclxubGV0IHZfbml6IHRyYWsgPSB0cmFrLm5pelxyXG5cclxubGV0IHByZWJyYW5pIHRyYWsgPSBTdHJpbmcuc3ViIHRyYWsubml6IDAgdHJhay5pbmRla3NfdHJlbnV0bmVnYV96bmFrYVxyXG5cclxuYW5kIG5lcHJlYnJhbmkgdHJhayA9XHJcbiAgU3RyaW5nLnN1YiB0cmFrLm5peiB0cmFrLmluZGVrc190cmVudXRuZWdhX3puYWthXHJcbiAgICAoU3RyaW5nLmxlbmd0aCB0cmFrLm5peiAtIHRyYWsuaW5kZWtzX3RyZW51dG5lZ2Ffem5ha2EpXHJcbiIsInR5cGUgdCA9IHsgYXZ0b21hdCA6IEF2dG9tYXQudDsgdHJhayA6IFRyYWsudDsgc3RhbmplIDogU3RhbmplLnQ7IHNrbGFkIDogY2hhciBTa2xhZC50IH1cclxuXHJcbmxldCBwb3plbmkgYXZ0b21hdCB0cmFrID1cclxuICB7IGF2dG9tYXQ7IHRyYWs7IHN0YW5qZSA9IEF2dG9tYXQuemFjZXRub19zdGFuamUgYXZ0b21hdDsgc2tsYWQgPSBTa2xhZC5wcmF6ZW5fc2tsYWR9XHJcblxyXG5sZXQgYXZ0b21hdCB7IGF2dG9tYXQ7IF8gfSA9IGF2dG9tYXRcclxubGV0IHRyYWsgeyB0cmFrOyBfIH0gPSB0cmFrXHJcbmxldCBzdGFuamUgeyBzdGFuamU7IF8gfSA9IHN0YW5qZVxyXG5cclxubGV0IGtvcmFrX25hcHJlaiB7IGF2dG9tYXQ7IHRyYWs7IHN0YW5qZTsgc2tsYWQgfSA9XHJcbiAgaWYgVHJhay5qZV9uYV9rb25jdSB0cmFrIHRoZW4gTm9uZVxyXG4gIGVsc2VcclxuICAgIGxldCBzdGFuamUnID1cclxuICAgICAgQXZ0b21hdC5wcmVob2RuYV9mdW5rY2lqYSBhdnRvbWF0IHNrbGFkIHN0YW5qZSAoVHJhay50cmVudXRuaV96bmFrIHRyYWspXHJcbiAgICBpblxyXG4gICAgbWF0Y2ggc3RhbmplJyB3aXRoXHJcbiAgICB8IE5vbmUgLT4gTm9uZVxyXG4gICAgfCBTb21lIChub3ZvX3N0YW5qZSwgbm92X3NrbGFkKSAtPlxyXG4gICAgICAgIFNvbWUgeyBhdnRvbWF0OyB0cmFrID0gVHJhay5wcmVtYWtuaV9uYXByZWogdHJhazsgc3RhbmplID0gbm92b19zdGFuamU7IHNrbGFkID0gbm92X3NrbGFkfVxyXG5cclxubGV0IGplX3Zfc3ByZWplbW5lbV9zdGFuanUgeyBhdnRvbWF0OyBzdGFuamU7IF8gfSA9XHJcbiAgQXZ0b21hdC5qZV9zcHJlamVtbm9fc3RhbmplIGF2dG9tYXQgc3RhbmplXHJcbiJdfQ==

@@ -15,8 +15,8 @@ let korak_naprej { avtomat; trak; stanje; sklad } =
     in
     match stanje' with
     | None -> None
-    | Some stanje' ->
-        Some { avtomat; trak = Trak.premakni_naprej trak; stanje = fst stanje'; sklad}
+    | Some (novo_stanje, nov_sklad) ->
+        Some { avtomat; trak = Trak.premakni_naprej trak; stanje = novo_stanje; sklad = nov_sklad}
 
 let je_v_sprejemnem_stanju { avtomat; stanje; _ } =
   Avtomat.je_sprejemno_stanje avtomat stanje

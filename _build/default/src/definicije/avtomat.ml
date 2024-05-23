@@ -64,6 +64,7 @@ let seznam_prehodov avtomat = avtomat.prehodi
 
 let je_sprejemno_stanje avtomat stanje =
   List.mem stanje avtomat.sprejemna_stanja
+  
 let oklepaji = 
   let q0 = Stanje.iz_niza "q0"
   and q1 = Stanje.iz_niza "q1"
