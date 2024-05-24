@@ -1,1 +1,1 @@
-src/definicije/zagnaniAvtomat.mli: Avtomat Stanje Trak
+src/definicije/zagnaniAvtomat.mli: Avtomat Sklad Stanje Trak

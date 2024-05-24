@@ -200,6 +200,13 @@ let prikaz_gumba_za_naslednji_znak model =
       ]
     [ text "preberi naslednji znak" ]
 
+let prikaz_sklada model =
+  let sklad = ZagnaniAvtomat.sklad model.avtomat in
+  let elementi = Sklad.vsebuje sklad in 
+  elt "div"
+    ~a:[ attr "class" "sklad" ]
+    (List.map (fun el -> elt "div" [ text (String.make 1 el) ]) elementi)
+
 let prikaz_avtomata model =
   let avtomat = ZagnaniAvtomat.avtomat model.avtomat in
   let stanja =
@@ -249,4 +256,5 @@ let view model =
           ] [];
       ];
       prikaz_avtomata model;
+      prikaz_sklada model;
     ]

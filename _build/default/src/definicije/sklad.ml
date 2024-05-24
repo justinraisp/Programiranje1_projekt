@@ -18,3 +18,5 @@ let vrh sklad =
   match sklad with 
   | [] -> failwith "Sklad je prazen"
   | x :: _ -> x
+
+let vsebuje sklad = List.rev sklad

@@ -74,17 +74,14 @@ let oklepaji =
   |> dodaj_nesprejemno_stanje q1
   |> dodaj_nesprejemno_stanje q3
   |> dodaj_prehod q0 '(' q1 |> dodaj_prehod q0 ')' q3
-  |> dodaj_prehod q1 '(' q1
-  |> dodaj_prehod q1 ')' q1 |> dodaj_prehod q1 ')' q2
+  |> dodaj_prehod q1 '(' q1 |> dodaj_prehod q1 ')' q1 |> dodaj_prehod q1 ')' q2 |> dodaj_prehod q1 ')' q3
   |> dodaj_prehod q2 '(' q1 |> dodaj_prehod q2 ')' q3
   |> dodaj_prehod q3 ')' q3 |> dodaj_prehod q3 '(' q3 
   |> dodaj_prehod q0 '[' q1 |> dodaj_prehod q0 ']' q3
-  |> dodaj_prehod q1 '[' q1
-  |> dodaj_prehod q1 ']' q1 |> dodaj_prehod q1 ']' q2
+  |> dodaj_prehod q1 '[' q1 |> dodaj_prehod q1 ']' q1 |> dodaj_prehod q1 ']' q2 |> dodaj_prehod q1 ']' q3
   |> dodaj_prehod q2 '[' q1 |> dodaj_prehod q2 ']' q3
   |> dodaj_prehod q3 ']' q3 |> dodaj_prehod q3 '[' q3 
   |> dodaj_prehod q0 '{' q1 |> dodaj_prehod q0 '}' q3
-  |> dodaj_prehod q1 '{' q1
-  |> dodaj_prehod q1 '}' q1 |> dodaj_prehod q1 '}' q2
+  |> dodaj_prehod q1 '{' q1 |> dodaj_prehod q1 '}' q1 |> dodaj_prehod q1 '}' q2 |> dodaj_prehod q1 '}' q3
   |> dodaj_prehod q2 '{' q1 |> dodaj_prehod q2 '}' q3
   |> dodaj_prehod q3 '}' q3 |> dodaj_prehod q3 '{' q3 
