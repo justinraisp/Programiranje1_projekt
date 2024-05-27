@@ -19,4 +19,4 @@ let vrh sklad =
   | [] -> failwith "Sklad je prazen"
   | x :: _ -> x
 
-let vsebuje sklad = List.rev sklad
+let vsebuje sklad = sklad

@@ -1,1 +1,1 @@
-src/definicije/sklad.ml: List
+src/definicije/sklad.ml:
