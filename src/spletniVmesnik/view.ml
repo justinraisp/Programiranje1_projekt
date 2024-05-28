@@ -19,6 +19,40 @@ module Parametri = struct
   let privzeta_barva_polnila = "white"
 end
 
+let style =
+  "
+\n\
+  \  .container {
+\n\
+  \    display: flex;
+\n\
+  \    justify-content: space-between;
+\n\
+  \  }
+\n\
+  \  .left-panel {
+\n\
+  \    flex: 2;
+\n\
+  \    margin-right: 20px;
+\n\
+  \  }
+\n\
+  \  .right-panel {
+\n\
+  \    flex: 1;
+\n\
+  \  }
+\n\
+  \  .sklad {
+\n\
+  \    border: 1px solid #ccc;
+\n\
+  \    padding: 10px;
+\n\
+  \  }
+\n"
+
 let int_of_float_attr tag value = int_attr tag (int_of_float value)
 
 let svg_krog ?(a = []) sredisce polmer =
@@ -202,10 +236,11 @@ let prikaz_gumba_za_naslednji_znak model =
 
 let prikaz_sklada model =
   let sklad = ZagnaniAvtomat.sklad model.avtomat in
-  let elementi = Sklad.vsebuje sklad in 
+  let elementi = Sklad.vsebuje sklad in
   elt "div"
     ~a:[ attr "class" "sklad" ]
-    (List.map (fun el -> elt "div" [ text (String.make 1 el) ]) elementi)
+    (elt "h3" [ text "Sklad" ]
+    :: List.map (fun el -> elt "div" [ text (String.make 1 el) ]) elementi)
 
 let prikaz_avtomata model =
   let avtomat = ZagnaniAvtomat.avtomat model.avtomat in
@@ -246,15 +281,24 @@ let prikaz_avtomata model =
 let view model =
   elt "article"
     [
+      elt "style" [ text style ];
       elt "header" [ prikaz_traku model; prikaz_gumba_za_naslednji_znak model ];
-      elt "div" [
-        input
-          ~a:[ 
-            attr "type" "text"; 
-            attr "placeholder" "Vnesi niz"; 
-            onchange (fun niz -> VnesiNiz niz)
-          ] [];
-      ];
-      prikaz_avtomata model;
-      prikaz_sklada model;
+      elt "div"
+        ~a:[ attr "class" "container" ]
+        [
+          elt "div"
+            ~a:[ attr "class" "left-panel" ]
+            [
+              input
+                ~a:
+                  [
+                    attr "type" "text";
+                    attr "placeholder" "Vnesi niz";
+                    onchange (fun niz -> VnesiNiz niz);
+                  ]
+                [];
+              prikaz_avtomata model;
+            ];
+          elt "div" ~a:[ attr "class" "right-panel" ] [ prikaz_sklada model ];
+        ];
     ]

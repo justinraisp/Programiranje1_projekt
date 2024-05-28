@@ -23,14 +23,14 @@ let preberi_niz avtomat niz =
   let rec aux trenutno_stanje trenutni_sklad index =
     if index < String.length niz then
       let znak = String.get niz index in
-      match Avtomat.prehodna_funkcija avtomat trenutni_sklad trenutno_stanje znak with
+      match
+        Avtomat.prehodna_funkcija avtomat trenutni_sklad trenutno_stanje znak
+      with
       | None -> None
-      | Some (nov_stanje, nov_sklad) ->
-          aux nov_stanje nov_sklad (index + 1)
-    else
-      Some trenutno_stanje
+      | Some (nov_stanje, nov_sklad) -> aux nov_stanje nov_sklad (index + 1)
+    else Some trenutno_stanje
   in
-  aux zacetno_stanje zacetni_sklad 0 
+  aux zacetno_stanje zacetni_sklad 0
 
 let update model = function
   | PreberiNiz str -> (
@@ -100,15 +100,15 @@ let init avtomat =
     stanje_sklada = Sklad.prazen_sklad;
   }
 
-  let rec loop model =
+let rec loop model =
   match model.stanje_vmesnika with
   | SeznamMoznosti ->
-    let msg = izpisi_moznosti () in
-    let model' = update model msg in
-    loop model'
+      let msg = izpisi_moznosti () in
+      let model' = update model msg in
+      loop model'
   | _ ->
-    let msg = view model in
-    let model' = update model msg in
-    loop model'
+      let msg = view model in
+      let model' = update model msg in
+      loop model'
 
-let _ = loop(init oklepaji)
+let _ = loop (init oklepaji)

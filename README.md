@@ -34,8 +34,6 @@ Skladovni avtomat je definiran kot nabor $(\Sigma, Q, q_0, F, \delta, \Gamma)$, 
   - Izvede en korak avtomata glede na trenutni znak na traku.
 - `let je_v_sprejemnem_stanju { avtomat; stanje; _ } = ...`
   - Preveri, ali je avtomat v sprejemnem stanju.
-- `let sklad { sklad; _ } = sklad`
-  - Vrne trenutni sklad avtomata.
 
 #### V datoteki `Sklad.ml`:
 
@@ -54,29 +52,36 @@ Skladovni avtomat je definiran kot nabor $(\Sigma, Q, q_0, F, \delta, \Gamma)$, 
 
 #### V datoteki `Avtomat.ml`:
 - `let prehodna_funkcija avtomat sklad stanje znak` 
-    - povezuje druge datoteke skupaj in implementira delovanje avtomata. Funkcija preverja skladnost oklepajev in zaklepajev, vsebino sklada in na podlagi tega izvaja prehode med stanji.
+    - povezuje druge datoteke skupaj in implementira delovanje avtomata. Funkcija preverja skladnost oklepajev in zaklepajev in na podlagi vsebine sklada izvaja prehode med stanji.
 
 
 ```ocaml
 let prehodna_funkcija avtomat sklad stanje znak =
-  match List.find_opt
-          (fun (stanje1, znak', _stanje2) -> stanje1 = stanje && znak = znak')
-          avtomat.prehodi with
-  | None -> 
-      None
-  | Some (_, _, stanje2) ->
-    begin 
-      match znak with
-      | '(' | '{' | '[' -> 
-        Some (stanje2, Sklad.dodaj znak sklad)
-      | ')' | '}' | ']' -> 
-          if Sklad.je_prazen sklad || Stanje.v_niz stanje = "q3" || Sklad.vrh sklad != ustrezni_odprti_oklepaj znak then 
-            Some(Stanje.iz_niza "q3", sklad)
-          else 
-            Some (if Sklad.je_prazen (Sklad.odstrani sklad) then (Stanje.iz_niza "q2", Sklad.odstrani sklad) else (Stanje.iz_niza "q1", Sklad.odstrani sklad))
-      | _ ->  
-          None
-    end
+  let stanje_q3 = Stanje.iz_niza "q3" in
+  match
+    List.find_opt
+      (fun (stanje1, znak', _stanje2) -> stanje1 = stanje && znak = znak')
+      avtomat.prehodi
+  with
+  | None -> None
+  | Some (_, _, stanje2) -> (
+      match Stanje.v_niz stanje with
+      | "q3" ->
+          Some (stanje_q3, sklad)
+      | _ -> (
+          match znak with
+          | '(' | '{' | '[' -> Some (stanje2, Sklad.dodaj znak sklad)
+          | ')' | '}' | ']' ->
+              if
+                Sklad.je_prazen sklad
+                || Sklad.vrh sklad != ustrezni_odprti_oklepaj znak
+              then Some (stanje_q3, sklad)
+              else
+                Some
+                  (if Sklad.je_prazen (Sklad.odstrani sklad) then
+                     (Stanje.iz_niza "q2", Sklad.odstrani sklad)
+                   else (Stanje.iz_niza "q1", Sklad.odstrani sklad))
+          | _ -> None))
 ```
 
 ### Razlike glede na končne avtomate
