@@ -16,7 +16,7 @@ Skladovni avtomat je definiran kot nabor $(\Sigma, Q, q_0, F, \delta, \Gamma, Z)
 - $\Gamma$ množica simbolov na skladu,
 - $Z \in \Gamma$ začetni simbol na skladu.
 
-Zgornji skladovni avtomat predstavimo z naborom $((,),[,],\{,\},q_0,q_1,q_2,q_3,q_0,q_2,\delta,(\, ,[\,,\{,\emptyset)$
+Zgornji skladovni avtomat predstavimo z naborom $`((,),[,],\{,\},q_0,q_1,q_2,q_3,q_0,q_2,\delta,(\, ,[\,,\{,\emptyset)`$
 
 Opomba: v tem projektu skladovni avtomat ni popoln, saj ne vključuje začetnega simbola na skladu. To pomeni, da je sklad na začetku prazen in začetni simbol na skladu ni definiran.
 
