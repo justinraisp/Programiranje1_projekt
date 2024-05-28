@@ -1,21 +1,38 @@
 # Skladovni avtomat
 
-Projekt vsebuje implementacijo skladovnega avtomata, ki omogoča preverjanje pravilnega gnezdenja oklepajev. Skladovni avtomat deluje tako, da ob vsaki pojavitvi oklepaja, bodisi navadnega, zavitega ali oglatega, ta oklepaj naloži na vrh sklada. Ob vsaki pojavitvi zaklepaja pa odstrani vrhnji oklepaj. V primeru, da se viden zaklepaj in vrhnji oklepaj na skladu ne ujemata, se bo avtomat premaknil v nesprejemno stanje, kjer bo tudi ostal. V primeru, da pridemo do konca niza brez napak, pa avtomat glede na sklad niz bodisi zavrne, če je sklad poln, bodisi sprejme, če je sklad prazen. Avtomat sprejema le nize sestavljene iz oklepajev ter zaklepajev.
+Projekt vsebuje implementacijo skladovnega avtomata, ki omogoča preverjanje pravilnega gnezdenja oklepajev. Skladovni avtomat deluje tako, da ob vsaki pojavitvi oklepaja, bodisi navadnega, zavitega ali oglatega, ta oklepaj naloži na vrh sklada. Ob vsaki pojavitvi zaklepaja pa odstrani vrhnji oklepaj. V primeru, da se viden zaklepaj in vrhnji oklepaj na skladu ne ujemata, se bo avtomat premaknil v nesprejemno stanje, kjer bo tudi ostal. V primeru, da pridemo do konca niza brez napak, pa avtomat glede na sklad niz bodisi zavrne, če je sklad poln, bodisi sprejme, če je sklad prazen. Avtomat sprejema le nize sestavljene iz oklepajev ter zaklepajev vseh treh tipov.
 
 ![Diagram avtomata](diagram/avtomat.png "Diagram avtomata za navadne oklepaje")
 
 ## Matematična definicija
 
-Skladovni avtomat je definiran kot nabor $(\Sigma, Q, q_0, F, \delta, \Gamma)$, kjer so:
+Skladovni avtomat je definiran kot nabor $(\Sigma, Q, q_0, F, \delta, \Gamma, Z)$, kjer so:
 
 - $\Sigma$ množica simbolov oz. abeceda,
 - $Q$ množica stanj,
 - $q_0 \in Q$ začetno stanje,
 - $F \subseteq Q$ množica sprejemnih stanj,
-- $\delta : Q \times \Sigma \times \Gamma \to Q \times \Gamma^*$ prehodna funkcija,
-- $\Gamma$ množica simbolov na skladu.
+- $\delta : Q \times (\Sigma \cup \epsilon) \times \Gamma \to Q \times \Gamma^*$ prehodna funkcija,
+- $\Gamma$ množica simbolov na skladu,
+- $Z \in \Gamma$ začetni simbol na skladu.
+
+Zgornji skladovni avtomat predstavimo z naborom $((,),[,],\{,\},q_0,q_1,q_2,q_3,q_0,q_2,\delta,(\, ,[\,,\{,\emptyset)$
+
+Opomba: v tem projektu skladovni avtomat ni popoln, saj ne vključuje začetnega simbola na skladu. To pomeni, da je sklad na začetku prazen in začetni simbol na skladu ni definiran.
 
 ## Opis uporabljenih tipov in glavnih funkcij
+
+### Struktura
+
+Projekt sledi obliki in logiki s predavanj pri predmetu Programiranje 1 na Fakulteti za matematiko in fiziko.
+
+Projekt je sestavljen iz map `src`, `html` in `diagram`:
+- `diagram` vsebuje latex datoteko za grafično predstavitev avtomata,
+- `html` vsebuje potrebne datoteke za predstavitev spletne strani avtomata,
+- `src` vsebuje logiko za delovanje avtomata in je razdeljena na tri dodatne mape:
+  - `definicije` vsebuje ocaml datoteke za avtomat, sklad, stanje, trak in zagnani avtomat,
+  - `spletniVmesnik` vsebuje ocaml datoteke za implementacijo spletnega vmesnika za uporabo avtomata,
+  - `tekstovniVmesnik` vsebuje ocaml datoteke za implementacijo tekstovnega vmesnika za uporabo avtomata.
 
 ### Tipi
 
@@ -26,7 +43,7 @@ Skladovni avtomat je definiran kot nabor $(\Sigma, Q, q_0, F, \delta, \Gamma)$, 
 
 ### Funkcije
 
-#### V datoteki `ZagnaniAvtomat.ml`:
+#### `zagnaniAvtomat.ml`:
 
 - `let pozeni avtomat trak = ...`
   - Inicializira skladovni avtomat z danim trakom.
@@ -35,7 +52,7 @@ Skladovni avtomat je definiran kot nabor $(\Sigma, Q, q_0, F, \delta, \Gamma)$, 
 - `let je_v_sprejemnem_stanju { avtomat; stanje; _ } = ...`
   - Preveri, ali je avtomat v sprejemnem stanju.
 
-#### V datoteki `Sklad.ml`:
+#### `sklad.ml`:
 
 - `let prazen_sklad = []`
   - Ustvari prazen sklad.
@@ -50,10 +67,9 @@ Skladovni avtomat je definiran kot nabor $(\Sigma, Q, q_0, F, \delta, \Gamma)$, 
 - `let vsebuje sklad = sklad`
   - Vrne seznam vseh elementov v skladu.
 
-#### V datoteki `Avtomat.ml`:
-- `let prehodna_funkcija avtomat sklad stanje znak` 
-    - povezuje druge datoteke skupaj in implementira delovanje avtomata. Funkcija preverja skladnost oklepajev in zaklepajev in na podlagi vsebine sklada izvaja prehode med stanji.
-
+#### `avtomat.ml`:
+- `prehodna_funkcija` 
+    - bistvena funkcija za delovanje avtomata. Funkcija preverja skladnost oklepajev in zaklepajev in na podlagi vsebine sklada izvaja prehode med stanji.
 
 ```ocaml
 let prehodna_funkcija avtomat sklad stanje znak =
@@ -84,17 +100,27 @@ let prehodna_funkcija avtomat sklad stanje znak =
           | _ -> None))
 ```
 
-### Razlike glede na končne avtomate
+#### `tekstovniVmesnik.ml`:
+ - Implementira datoteke iz mape `src` in omogoča uporabo avtomata znotraj termina.
 
-Skladovni avtomati se razlikujejo od končnih avtomatov predvsem v tem, da imajo poleg stanj in prehodov tudi sklad, ki omogoča shranjevanje in dostopanje do vmesnih simbolov. V tej implementaciji skladovni avtomat uporablja sklad za shranjevanje oklepajev, kar omogoča preverjanje pravilnega gnezdenja oklepajev.
+#### `spletniVmesnik.ml`:
+ - Podobno kot `tekstovniVmesnik.ml` omogoča uporabo avtomata, le da nam ta predstavi grafično bolj prijazno obliko avtomata lokalno na spletu.
+
+## Razlike glede na končne avtomate
+
+Skladovni avtomati se razlikujejo od končnih avtomatov predvsem v tem, da imajo poleg stanj in prehodov tudi sklad, ki omogoča shranjevanje in dostopanje do vmesnih simbolov. Skladovni avtomat lahko v vsakem koraku prebere le en znak in vrh sklada. Glede na te informacije se odloči ali bo dodal znak na vrh sklada ali pa odstranil vrhnji element dol s sklada. Po izvedeni operaciji se izvede prehod v naslednje stanje.
 
 ## Navodila za uporabo
 
 Implementacija omogoča preverjanje pravilnega gnezdenja oklepajev. Na voljo sta dva vmesnika, tekstovni in grafični. Oba prevedemo z ukazom `dune build`, ki v korenskem imeniku ustvari datoteko `tekstovniVmesnik.exe`, v imeniku `html` pa JavaScript datoteko `spletniVmesnik.bc.js`, ki se izvede, ko v brskalniku odpremo `spletniVmesnik.html`.
 
-### Tekstovni vmesnik
+Če OCamla nimate nameščenega, lahko še vedno preizkusite tekstovni vmesnik prek ene od spletnih implementacij OCamla, najbolje <http://ocaml.besson.link/>, ki podpira branje s konzole. V tem primeru si na vrh datoteke `tekstovniVmesnik.ml` dodajte še vrstice
 
-Če OCamla nimate nameščenega, lahko še vedno preizkusite tekstovni vmesnik prek ene od spletnih implementacij OCamla, na primer <http://ocaml.besson.link/>, ki podpira branje s konzole. V tem primeru si na vrh datoteke `tekstovniVmesnik.ml` dodajte še vrstice:
+```ocaml
+module Avtomat = struct
+    (* celotna vsebina datoteke avtomat.ml *)
+end
+```
 
 ## Primeri uporabe skladovnega avtomata
 
